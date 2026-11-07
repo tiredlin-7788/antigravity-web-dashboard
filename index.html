@@ -49,20 +49,26 @@
     /* Theme Styles */
     body.theme-ios {
       --bg-main: #000000;
-      --card-bg: rgba(28, 28, 30, 0.75);
-      --card-border: rgba(255, 255, 255, 0.12);
-      --card-backdrop: blur(20px);
+      --card-bg: rgba(28, 28, 30, 0.85);
+      --card-border: rgba(255, 255, 255, 0.16);
+      --card-backdrop: blur(25px);
+      --sub-card-bg: rgba(44, 44, 46, 0.6);
+      --sub-card-border: rgba(255, 255, 255, 0.1);
       --text-main: #ffffff;
-      --text-muted: #8e8e93;
+      --text-muted: #d1d5db; /* high contrast light gray */
+      --text-sub: #9ca3af;
     }
 
     body.theme-cyber {
       --bg-main: #050811;
-      --card-bg: rgba(10, 17, 32, 0.85);
-      --card-border: rgba(56, 189, 248, 0.3);
-      --card-backdrop: blur(10px);
+      --card-bg: rgba(10, 17, 32, 0.9);
+      --card-border: rgba(56, 189, 248, 0.35);
+      --card-backdrop: blur(15px);
+      --sub-card-bg: rgba(15, 23, 42, 0.7);
+      --sub-card-border: rgba(56, 189, 248, 0.2);
       --text-main: #38bdf8;
-      --text-muted: #0284c7;
+      --text-muted: #bae6fd;
+      --text-sub: #7dd3fc;
     }
 
     body.theme-clean {
@@ -70,8 +76,11 @@
       --card-bg: #1e293b;
       --card-border: #334155;
       --card-backdrop: none;
+      --sub-card-bg: #0f172a;
+      --sub-card-border: #334155;
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --text-muted: #cbd5e1;
+      --text-sub: #94a3b8;
     }
 
     .glass-card {
@@ -79,6 +88,11 @@
       border: 1px solid var(--card-border);
       backdrop-filter: var(--card-backdrop);
       -webkit-backdrop-filter: var(--card-backdrop);
+    }
+
+    .sub-card {
+      background: var(--sub-card-bg);
+      border: 1px solid var(--sub-card-border);
     }
 
     /* Pulse animation */
@@ -140,117 +154,117 @@
 
     <!-- Pools Section with Dual Window (5-Hour & Weekly) -->
     <div class="flex flex-col gap-3.5">
-      
-      <!-- Claude & GPT Card -->
-      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <div class="w-2.5 h-2.5 rounded-full bg-purple-400"></div>
-            <div>
-              <div class="font-semibold text-base tracking-tight">Claude & GPT models</div>
-              <div class="text-xs text-gray-400">Claude Opus / Sonnet, GPT-OSS</div>
-            </div>
-          </div>
-        </div>
 
-        <!-- 5-Hour Limit Sub-card -->
-        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
-          <div class="flex justify-between text-xs">
-            <span class="text-gray-300 font-medium">⚡ 5 小時限制</span>
-            <span id="claude-5h-pct" class="font-bold font-mono text-purple-400">--%</span>
-          </div>
-          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-            <div id="claude-5h-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700" style="width: 0%"></div>
-          </div>
-          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
-            <span>重置: <span id="claude-5h-countdown" class="text-white">--</span></span>
-            <span id="claude-5h-time" class="text-gray-500">--</span>
-          </div>
-        </div>
-
-        <!-- Weekly Limit Sub-card -->
-        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
-          <div class="flex justify-between text-xs">
-            <span class="text-gray-300 font-medium">📅 週間限制 (方案基本配額)</span>
-            <span id="claude-week-pct" class="font-bold font-mono text-purple-400">--%</span>
-          </div>
-          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-            <div id="claude-week-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700" style="width: 0%"></div>
-          </div>
-          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
-            <span>重置: <span id="claude-week-countdown" class="text-white">--</span></span>
-            <span id="claude-week-time" class="text-gray-500">--</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gemini Models Card -->
+      <!-- 1. Gemini Models Card -->
       <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
             <div>
-              <div class="font-semibold text-base tracking-tight">Gemini Models</div>
-              <div class="text-xs text-gray-400">Gemini Flash, Pro & Thinking</div>
+              <div class="font-semibold text-base tracking-tight text-white">Gemini Models</div>
+              <div class="text-xs text-gray-300">Gemini Flash, Pro & Thinking</div>
             </div>
           </div>
         </div>
 
         <!-- 5-Hour Limit Sub-card -->
-        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
-          <div class="flex justify-between text-xs">
-            <span class="text-gray-300 font-medium">⚡ 5 小時限制</span>
-            <span id="gemini-5h-pct" class="font-bold font-mono text-emerald-400">--%</span>
+        <div class="sub-card rounded-xl p-3 flex flex-col gap-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-200 font-medium flex items-center gap-1">⚡ 5 小時限制</span>
+            <span id="gemini-5h-pct" class="font-bold font-mono text-emerald-400 text-sm">--%</span>
           </div>
           <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
             <div id="gemini-5h-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-700" style="width: 0%"></div>
           </div>
-          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
-            <span>重置: <span id="gemini-5h-countdown" class="text-white">--</span></span>
-            <span id="gemini-5h-time" class="text-gray-500">--</span>
+          <div class="flex justify-between items-center text-[11px] font-mono pt-0.5">
+            <span class="text-gray-300">重置: <span id="gemini-5h-countdown" class="text-white font-medium">--</span></span>
+            <span id="gemini-5h-time" class="text-gray-400">--</span>
           </div>
         </div>
 
         <!-- Weekly Limit Sub-card -->
-        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
-          <div class="flex justify-between text-xs">
-            <span class="text-gray-300 font-medium">📅 週間限制 (方案基本配額)</span>
-            <span id="gemini-week-pct" class="font-bold font-mono text-emerald-400">--%</span>
+        <div class="sub-card rounded-xl p-3 flex flex-col gap-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-200 font-medium flex items-center gap-1">📅 週間限制 (方案基本配額)</span>
+            <span id="gemini-week-pct" class="font-bold font-mono text-emerald-400 text-sm">--%</span>
           </div>
           <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
             <div id="gemini-week-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-700" style="width: 0%"></div>
           </div>
-          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
-            <span>重置: <span id="gemini-week-countdown" class="text-white">--</span></span>
-            <span id="gemini-week-time" class="text-gray-500">--</span>
+          <div class="flex justify-between items-center text-[11px] font-mono pt-0.5">
+            <span class="text-gray-300">重置: <span id="gemini-week-countdown" class="text-white font-medium">--</span></span>
+            <span id="gemini-week-time" class="text-gray-400">--</span>
           </div>
         </div>
       </div>
 
-      <!-- Gemini 4 Argon Card -->
+      <!-- 2. Gemini 4 Argon Card -->
       <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <div class="w-2.5 h-2.5 rounded-full bg-sky-400"></div>
             <div>
-              <div class="font-semibold text-base tracking-tight">Gemini 4 Argon</div>
-              <div class="text-xs text-gray-400">Argon 系列旗艦專屬配額</div>
+              <div class="font-semibold text-base tracking-tight text-white">Gemini 4 Argon</div>
+              <div class="text-xs text-gray-300">Argon 系列旗艦專屬配額</div>
             </div>
           </div>
         </div>
 
         <!-- Weekly Limit (Argon is weekly only) -->
-        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
-          <div class="flex justify-between text-xs">
-            <span class="text-gray-300 font-medium">📅 週間限制 (Argon Weekly Limit)</span>
-            <span id="argon-week-pct" class="font-bold font-mono text-sky-400">--%</span>
+        <div class="sub-card rounded-xl p-3 flex flex-col gap-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-200 font-medium flex items-center gap-1">📅 週間限制 (Argon Weekly Limit)</span>
+            <span id="argon-week-pct" class="font-bold font-mono text-sky-400 text-sm">--%</span>
           </div>
           <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
             <div id="argon-week-bar" class="h-full bg-sky-400 rounded-full transition-all duration-700" style="width: 0%"></div>
           </div>
-          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
-            <span>重置: <span id="argon-week-countdown" class="text-white">--</span></span>
-            <span id="argon-week-time" class="text-gray-500">--</span>
+          <div class="flex justify-between items-center text-[11px] font-mono pt-0.5">
+            <span class="text-gray-300">重置: <span id="argon-week-countdown" class="text-white font-medium">--</span></span>
+            <span id="argon-week-time" class="text-gray-400">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Claude & GPT Card (Moved to bottom) -->
+      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-purple-400"></div>
+            <div>
+              <div class="font-semibold text-base tracking-tight text-white">Claude & GPT models</div>
+              <div class="text-xs text-gray-300">Claude Opus / Sonnet, GPT-OSS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Hour Limit Sub-card -->
+        <div class="sub-card rounded-xl p-3 flex flex-col gap-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-200 font-medium flex items-center gap-1">⚡ 5 小時限制</span>
+            <span id="claude-5h-pct" class="font-bold font-mono text-purple-400 text-sm">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="claude-5h-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between items-center text-[11px] font-mono pt-0.5">
+            <span class="text-gray-300">重置: <span id="claude-5h-countdown" class="text-white font-medium">--</span></span>
+            <span id="claude-5h-time" class="text-gray-400">--</span>
+          </div>
+        </div>
+
+        <!-- Weekly Limit Sub-card -->
+        <div class="sub-card rounded-xl p-3 flex flex-col gap-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-200 font-medium flex items-center gap-1">📅 週間限制 (方案基本配額)</span>
+            <span id="claude-week-pct" class="font-bold font-mono text-purple-400 text-sm">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="claude-week-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between items-center text-[11px] font-mono pt-0.5">
+            <span class="text-gray-300">重置: <span id="claude-week-countdown" class="text-white font-medium">--</span></span>
+            <span id="claude-week-time" class="text-gray-400">--</span>
           </div>
         </div>
       </div>
