@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Antigravity Quota Meter</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Token Meter">
+  <meta name="theme-color" content="#0b0f19">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            iosbg: '#000000',
+            cardbg: '#1c1c1e',
+            cardborder: '#2c2c2e',
+            claude: '#b180ff',
+            argon: '#38bdf8',
+            gemini: '#34d399',
+            danger: '#f43f5e',
+            warning: '#f59e0b'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            mono: ['"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Safe Area insets for iPhone notch/Dynamic Island */
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Theme Styles */
+    body.theme-ios {
+      --bg-main: #000000;
+      --card-bg: rgba(28, 28, 30, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --card-backdrop: blur(20px);
+      --text-main: #ffffff;
+      --text-muted: #8e8e93;
+    }
+
+    body.theme-cyber {
+      --bg-main: #050811;
+      --card-bg: rgba(10, 17, 32, 0.85);
+      --card-border: rgba(56, 189, 248, 0.3);
+      --card-backdrop: blur(10px);
+      --text-main: #38bdf8;
+      --text-muted: #0284c7;
+    }
+
+    body.theme-clean {
+      --bg-main: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --card-backdrop: none;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+    }
+
+    /* Pulse animation */
+    @keyframes soft-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.99); }
+    }
+    .anim-pulse {
+      animation: soft-pulse 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="theme-ios min-h-screen text-white bg-black antialiased transition-colors duration-300">
+  <div class="max-w-md mx-auto px-4 py-5 flex flex-col gap-4">
+    
+    <!-- Top Nav / Header -->
+    <header class="flex items-center justify-between pb-1">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+          ⚡
+        </div>
+        <div>
+          <h1 class="text-lg font-semibold tracking-tight leading-tight">Antigravity Quota</h1>
+          <p id="sub-status" class="text-xs text-gray-400 font-mono">Google AI Pro</p>
+        </div>
+      </div>
+
+      <!-- Controls: Theme toggle & Refresh -->
+      <div class="flex items-center gap-2">
+        <!-- Theme Selector -->
+        <button id="theme-btn" onclick="toggleTheme()" class="px-2.5 py-1 text-xs rounded-full bg-white/10 hover:bg-white/15 border border-white/10 active:scale-95 transition-all flex items-center gap-1 text-gray-300">
+          <span id="theme-icon">🍎</span>
+          <span id="theme-label" class="font-medium text-[11px]">iOS</span>
+        </button>
+
+        <!-- Refresh Button -->
+        <button id="refresh-btn" onclick="fetchData(true)" class="p-2 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 active:scale-95 transition-all text-gray-300">
+          <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Bottleneck Banner (Visible if any pool < 50% or info) -->
+    <div id="bottleneck-banner" class="glass-card rounded-2xl p-3.5 flex items-center justify-between shadow-lg transition-all">
+      <div class="flex items-center gap-3">
+        <span id="bn-icon" class="text-xl">🟢</span>
+        <div>
+          <div class="text-[11px] font-semibold tracking-wider uppercase text-gray-400">系統瓶頸監測</div>
+          <div id="bn-text" class="text-sm font-medium text-white">配額充足 (全模型 95%+)</div>
+        </div>
+      </div>
+      <div class="text-right">
+        <span id="bn-percent" class="text-xl font-bold font-mono">100%</span>
+      </div>
+    </div>
+
+    <!-- Pools Section -->
+    <div class="flex flex-col gap-3">
+      
+      <!-- Claude Pool Card -->
+      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-purple-400"></div>
+            <div>
+              <div class="font-semibold text-base tracking-tight">Claude 3.5 / 3.7 / 5.5</div>
+              <div class="text-xs text-gray-400">Anthropic Claude 系列</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="claude-pct" class="text-2xl font-bold font-mono text-purple-400">--%</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
+          <div id="claude-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+        </div>
+
+        <!-- Meta Footer: Countdown & Reset Time -->
+        <div class="flex justify-between items-center text-xs text-gray-400 font-mono pt-1 border-t border-white/5">
+          <span class="flex items-center gap-1">
+            <span>⏱️ 重置:</span>
+            <span id="claude-countdown" class="text-white font-medium">計���中...</span>
+          </span>
+          <span id="claude-reset-time" class="text-[11px] text-gray-500">--:--</span>
+        </div>
+      </div>
+
+      <!-- Argon / GPT-OSS Card -->
+      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-sky-400"></div>
+            <div>
+              <div class="font-semibold text-base tracking-tight">Gemini 4 Argon & GPT-OSS</div>
+              <div class="text-xs text-gray-400">Argon 系列旗艦模型</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="argon-pct" class="text-2xl font-bold font-mono text-sky-400">--%</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
+          <div id="argon-bar" class="h-full bg-sky-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+        </div>
+
+        <!-- Meta Footer -->
+        <div class="flex justify-between items-center text-xs text-gray-400 font-mono pt-1 border-t border-white/5">
+          <span class="flex items-center gap-1">
+            <span>⏱️ 重置:</span>
+            <span id="argon-countdown" class="text-white font-medium">計算中...</span>
+          </span>
+          <span id="argon-reset-time" class="text-[11px] text-gray-500">--:--</span>
+        </div>
+      </div>
+
+      <!-- Gemini 2.5 / 3 Card -->
+      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+            <div>
+              <div class="font-semibold text-base tracking-tight">Gemini 2.5 / 3.x 系列</div>
+              <div class="text-xs text-gray-400">Flash, Pro & Thinking 模型</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="gemini-pct" class="text-2xl font-bold font-mono text-emerald-400">--%</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
+          <div id="gemini-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+        </div>
+
+        <!-- Meta Footer -->
+        <div class="flex justify-between items-center text-xs text-gray-400 font-mono pt-1 border-t border-white/5">
+          <span class="flex items-center gap-1">
+            <span>⏱️ 重置:</span>
+            <span id="gemini-countdown" class="text-white font-medium">計算中...</span>
+          </span>
+          <span id="gemini-reset-time" class="text-[11px] text-gray-500">--:--</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Collapsible Detail Models Accordion -->
+    <div class="glass-card rounded-2xl overflow-hidden shadow-lg">
+      <button onclick="toggleDetails()" class="w-full px-4 py-3 flex items-center justify-between text-left text-xs font-medium text-gray-300 hover:bg-white/5 transition-colors">
+        <span class="flex items-center gap-2">
+          <span>📊</span>
+          <span>模型細項清單 (<span id="total-models-count">0</span> 款模型)</span>
+        </span>
+        <svg id="detail-chevron" class="w-4 h-4 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+
+      <div id="detail-list" class="hidden px-4 pb-4 pt-1 flex flex-col gap-2 divide-y divide-white/5 max-h-80 overflow-y-auto">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Status Footer -->
+    <footer class="mt-2 text-center text-[11px] text-gray-500 font-mono flex flex-col gap-1">
+      <div>最後更新：<span id="last-update" class="text-gray-400">--:--:--</span> (每30秒自動輪詢)</div>
+      <div class="text-[10px] text-gray-600">Tailscale: bourbon-win | Antigravity Native Bridge</div>
+    </footer>
+
+  </div>
+
+  <script>
+    let currentData = null;
+    let refreshInterval = null;
+    let countdownInterval = null;
+
+    // Themes: ios, cyber, clean
+    const themes = [
+      { id: 'theme-ios', icon: '🍎', label: 'iOS' },
+      { id: 'theme-cyber', icon: '⚡', label: 'Cyber' },
+      { id: 'theme-clean', icon: '💎', label: 'Slate' }
+    ];
+    let currentThemeIdx = 0;
+
+    function toggleTheme() {
+      currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+      applyTheme(themes[currentThemeIdx]);
+      localStorage.setItem('ag_theme', themes[currentThemeIdx].id);
+    }
+
+    function applyTheme(theme) {
+      document.body.className = `${theme.id} min-h-screen antialiased transition-colors duration-300`;
+      document.body.style.background = `var(--bg-main)`;
+      document.getElementById('theme-icon').textContent = theme.icon;
+      document.getElementById('theme-label').textContent = theme.label;
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem('ag_theme');
+      if (saved) {
+        const found = themes.findIndex(t => t.id === saved);
+        if (found !== -1) currentThemeIdx = found;
+      }
+      applyTheme(themes[currentThemeIdx]);
+    }
+
+    function toggleDetails() {
+      const el = document.getElementById('detail-list');
+      const chev = document.getElementById('detail-chevron');
+      el.classList.toggle('hidden');
+      chev.classList.toggle('rotate-180');
+    }
+
+    function formatCountdown(targetIso) {
+      if (!targetIso) return '無限制 / 滿額';
+      const now = Date.now();
+      const target = Date.parse(targetIso);
+      if (isNaN(target)) return '時間未知';
+      const diffMs = target - now;
+      if (diffMs <= 0) return '已重置';
+
+      const totalSec = Math.floor(diffMs / 1000);
+      const hours = Math.floor(totalSec / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+
+      if (hours > 24) {
+        const days = Math.floor(hours / 24);
+        const remH = hours % 24;
+        return `${days}天 ${remH}小時後`;
+      }
+      return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function formatTime(isoStr) {
+      if (!isoStr) return '--:--';
+      try {
+        const d = new Date(isoStr);
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } catch {
+        return '--:--';
+      }
+    }
+
+    function getColorClass(pct) {
+      if (pct <= 20) return 'text-red-400';
+      if (pct <= 50) return 'text-amber-400';
+      return '';
+    }
+
+    function renderUI(data) {
+      currentData = data;
+      document.getElementById('sub-status').textContent = `${data.tierName} (${data.project})`;
+
+      const pools = data.pools;
+      
+      // Update Pools
+      ['claude', 'argon', 'gemini'].forEach(id => {
+        const pool = pools[id];
+        if (!pool) return;
+        const pct = pool.remainingPercent;
+        
+        const pctEl = document.getElementById(`${id}-pct`);
+        const barEl = document.getElementById(`${id}-bar`);
+        const cdEl = document.getElementById(`${id}-countdown`);
+        const rtEl = document.getElementById(`${id}-reset-time`);
+
+        pctEl.textContent = `${pct}%`;
+        barEl.style.width = `${pct}%`;
+
+        // Color coding on low quota
+        if (pct <= 20) {
+          barEl.className = 'h-full bg-rose-500 rounded-full transition-all duration-700 ease-out';
+          pctEl.className = 'text-2xl font-bold font-mono text-rose-500';
+        } else if (pct <= 50) {
+          barEl.className = 'h-full bg-amber-400 rounded-full transition-all duration-700 ease-out';
+          pctEl.className = 'text-2xl font-bold font-mono text-amber-400';
+        }
+
+        cdEl.textContent = formatCountdown(pool.resetTime);
+        rtEl.textContent = pool.resetTime ? `預計 ${formatTime(pool.resetTime)}` : '定期重置';
+      });
+
+      // Update Bottleneck banner
+      const bn = data.bottleneck;
+      const bnBanner = document.getElementById('bottleneck-banner');
+      const bnText = document.getElementById('bn-text');
+      const bnPct = document.getElementById('bn-percent');
+      const bnIcon = document.getElementById('bn-icon');
+
+      if (bn && bn.remainingPercent < 30) {
+        bnIcon.textContent = '🔴';
+        bnText.innerHTML = `最高警戒：<span class="font-bold text-red-400">${bn.name}</span> 配額緊繃`;
+        bnPct.textContent = `${bn.remainingPercent}%`;
+        bnPct.className = 'text-xl font-bold font-mono text-red-400';
+      } else if (bn && bn.remainingPercent < 60) {
+        bnIcon.textContent = '🟡';
+        bnText.innerHTML = `注意：<span class="font-bold text-amber-400">${bn.name}</span> 正處於活躍消耗中`;
+        bnPct.textContent = `${bn.remainingPercent}%`;
+        bnPct.className = 'text-xl font-bold font-mono text-amber-400';
+      } else {
+        bnIcon.textContent = '🟢';
+        bnText.textContent = '全模型配額充足 (90%+)';
+        bnPct.textContent = bn ? `${bn.remainingPercent}%` : '100%';
+        bnPct.className = 'text-xl font-bold font-mono text-emerald-400';
+      }
+
+      // Update detail list
+      const detailContainer = document.getElementById('detail-list');
+      detailContainer.innerHTML = '';
+      let totalModels = 0;
+
+      ['claude', 'argon', 'gemini'].forEach(pId => {
+        const pool = pools[pId];
+        if (!pool || !pool.models) return;
+        totalModels += pool.models.length;
+
+        pool.models.forEach(m => {
+          const row = document.createElement('div');
+          row.className = 'pt-2 flex items-center justify-between text-xs';
+          row.innerHTML = `
+            <div class="flex flex-col">
+              <span class="font-mono font-medium text-gray-200">${m.modelId}</span>
+              <span class="text-[10px] text-gray-500">重置: ${formatCountdown(m.resetTime)}</span>
+            </div>
+            <div class="font-mono font-bold ${m.remainingPercent <= 20 ? 'text-red-400' : (m.remainingPercent <= 50 ? 'text-amber-400' : 'text-gray-300')}">
+              ${m.remainingPercent}%
+            </div>
+          `;
+          detailContainer.appendChild(row);
+        });
+      });
+
+      document.getElementById('total-models-count').textContent = totalModels;
+      document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+    }
+
+    async function fetchData(isManual = false) {
+      const btnIcon = document.getElementById('refresh-icon');
+      if (isManual) btnIcon.classList.add('animate-spin');
+
+      try {
+        const res = await fetch('/api/quota');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        renderUI(data);
+      } catch (err) {
+        console.error('Fetch error:', err);
+      } finally {
+        if (isManual) {
+          setTimeout(() => btnIcon.classList.remove('animate-spin'), 600);
+        }
+      }
+    }
+
+    function startCountdownTimer() {
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        if (!currentData) return;
+        ['claude', 'argon', 'gemini'].forEach(id => {
+          const pool = currentData.pools[id];
+          if (pool) {
+            document.getElementById(`${id}-countdown`).textContent = formatCountdown(pool.resetTime);
+          }
+        });
+      }, 1000);
+    }
+
+    // Initialize
+    initTheme();
+    fetchData();
+    startCountdownTimer();
+    refreshInterval = setInterval(() => fetchData(false), 30000);
+  </script>
+</body>
+</html>
