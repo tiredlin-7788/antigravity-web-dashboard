@@ -138,116 +138,123 @@
       </div>
     </div>
 
-    <!-- Pools Section -->
-    <div class="flex flex-col gap-3">
+    <!-- Pools Section with Dual Window (5-Hour & Weekly) -->
+    <div class="flex flex-col gap-3.5">
       
-      <!-- Claude Pool Card -->
+      <!-- Claude & GPT Card -->
       <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <div class="w-2.5 h-2.5 rounded-full bg-purple-400"></div>
             <div>
-              <div class="font-semibold text-base tracking-tight">Claude 3.5 / 3.7 / 5.5</div>
-              <div class="text-xs text-gray-400">Anthropic Claude 系列</div>
+              <div class="font-semibold text-base tracking-tight">Claude & GPT models</div>
+              <div class="text-xs text-gray-400">Claude Opus / Sonnet, GPT-OSS</div>
             </div>
           </div>
-          <div class="text-right">
-            <span id="claude-pct" class="text-2xl font-bold font-mono text-purple-400">--%</span>
+        </div>
+
+        <!-- 5-Hour Limit Sub-card -->
+        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300 font-medium">⚡ 5 小時限制</span>
+            <span id="claude-5h-pct" class="font-bold font-mono text-purple-400">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="claude-5h-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
+            <span>重置: <span id="claude-5h-countdown" class="text-white">--</span></span>
+            <span id="claude-5h-time" class="text-gray-500">--</span>
           </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
-          <div id="claude-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-        </div>
-
-        <!-- Meta Footer: Countdown & Reset Time -->
-        <div class="flex justify-between items-center text-xs text-gray-400 font-mono pt-1 border-t border-white/5">
-          <span class="flex items-center gap-1">
-            <span>⏱️ 重置:</span>
-            <span id="claude-countdown" class="text-white font-medium">計���中...</span>
-          </span>
-          <span id="claude-reset-time" class="text-[11px] text-gray-500">--:--</span>
+        <!-- Weekly Limit Sub-card -->
+        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300 font-medium">📅 週間限制 (方案基本配額)</span>
+            <span id="claude-week-pct" class="font-bold font-mono text-purple-400">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="claude-week-bar" class="h-full bg-purple-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
+            <span>重置: <span id="claude-week-countdown" class="text-white">--</span></span>
+            <span id="claude-week-time" class="text-gray-500">--</span>
+          </div>
         </div>
       </div>
 
-      <!-- Argon / GPT-OSS Card -->
+      <!-- Gemini Models Card -->
       <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
-        <div class="flex justify-between items-start">
-          <div class="flex items-center gap-2">
-            <div class="w-2.5 h-2.5 rounded-full bg-sky-400"></div>
-            <div>
-              <div class="font-semibold text-base tracking-tight">Gemini 4 Argon & GPT-OSS</div>
-              <div class="text-xs text-gray-400">Argon 系列旗艦模型</div>
-            </div>
-          </div>
-          <div class="text-right">
-            <span id="argon-pct" class="text-2xl font-bold font-mono text-sky-400">--%</span>
-          </div>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
-          <div id="argon-bar" class="h-full bg-sky-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-        </div>
-
-        <!-- Meta Footer -->
-        <div class="flex justify-between items-center text-xs text-gray-400 font-mono pt-1 border-t border-white/5">
-          <span class="flex items-center gap-1">
-            <span>⏱️ 重置:</span>
-            <span id="argon-countdown" class="text-white font-medium">計算中...</span>
-          </span>
-          <span id="argon-reset-time" class="text-[11px] text-gray-500">--:--</span>
-        </div>
-      </div>
-
-      <!-- Gemini 2.5 / 3 Card -->
-      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
             <div>
-              <div class="font-semibold text-base tracking-tight">Gemini 2.5 / 3.x 系列</div>
-              <div class="text-xs text-gray-400">Flash, Pro & Thinking 模型</div>
+              <div class="font-semibold text-base tracking-tight">Gemini Models</div>
+              <div class="text-xs text-gray-400">Gemini Flash, Pro & Thinking</div>
             </div>
           </div>
-          <div class="text-right">
-            <span id="gemini-pct" class="text-2xl font-bold font-mono text-emerald-400">--%</span>
+        </div>
+
+        <!-- 5-Hour Limit Sub-card -->
+        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300 font-medium">⚡ 5 小時限制</span>
+            <span id="gemini-5h-pct" class="font-bold font-mono text-emerald-400">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="gemini-5h-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
+            <span>重置: <span id="gemini-5h-countdown" class="text-white">--</span></span>
+            <span id="gemini-5h-time" class="text-gray-500">--</span>
           </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
-          <div id="gemini-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-        </div>
-
-        <!-- Meta Footer -->
-        <div class="flex justify-between items-center text-xs text-gray-400 font-mono pt-1 border-t border-white/5">
-          <span class="flex items-center gap-1">
-            <span>⏱️ 重置:</span>
-            <span id="gemini-countdown" class="text-white font-medium">計算中...</span>
-          </span>
-          <span id="gemini-reset-time" class="text-[11px] text-gray-500">--:--</span>
+        <!-- Weekly Limit Sub-card -->
+        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300 font-medium">📅 週間限制 (方案基本配額)</span>
+            <span id="gemini-week-pct" class="font-bold font-mono text-emerald-400">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="gemini-week-bar" class="h-full bg-emerald-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
+            <span>重置: <span id="gemini-week-countdown" class="text-white">--</span></span>
+            <span id="gemini-week-time" class="text-gray-500">--</span>
+          </div>
         </div>
       </div>
 
-    </div>
+      <!-- Gemini 4 Argon Card -->
+      <div class="glass-card rounded-2xl p-4 shadow-xl flex flex-col gap-3 relative overflow-hidden">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-sky-400"></div>
+            <div>
+              <div class="font-semibold text-base tracking-tight">Gemini 4 Argon</div>
+              <div class="text-xs text-gray-400">Argon 系列旗艦專屬配額</div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Collapsible Detail Models Accordion -->
-    <div class="glass-card rounded-2xl overflow-hidden shadow-lg">
-      <button onclick="toggleDetails()" class="w-full px-4 py-3 flex items-center justify-between text-left text-xs font-medium text-gray-300 hover:bg-white/5 transition-colors">
-        <span class="flex items-center gap-2">
-          <span>📊</span>
-          <span>模型細項清單 (<span id="total-models-count">0</span> 款模型)</span>
-        </span>
-        <svg id="detail-chevron" class="w-4 h-4 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-      </button>
-
-      <div id="detail-list" class="hidden px-4 pb-4 pt-1 flex flex-col gap-2 divide-y divide-white/5 max-h-80 overflow-y-auto">
-        <!-- Rendered by JS -->
+        <!-- Weekly Limit (Argon is weekly only) -->
+        <div class="bg-black/30 rounded-xl p-2.5 flex flex-col gap-1.5 border border-white/5">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300 font-medium">📅 週間限制 (Argon Weekly Limit)</span>
+            <span id="argon-week-pct" class="font-bold font-mono text-sky-400">--%</span>
+          </div>
+          <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div id="argon-week-bar" class="h-full bg-sky-400 rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-gray-400 font-mono pt-0.5">
+            <span>重置: <span id="argon-week-countdown" class="text-white">--</span></span>
+            <span id="argon-week-time" class="text-gray-500">--</span>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- Status Footer -->
@@ -301,7 +308,7 @@
     }
 
     function formatCountdown(targetIso) {
-      if (!targetIso) return '無限制 / 滿額';
+      if (!targetIso) return '無限制';
       const now = Date.now();
       const target = Date.parse(targetIso);
       if (isNaN(target)) return '時間未知';
@@ -313,7 +320,7 @@
       const mins = Math.floor((totalSec % 3600) / 60);
       const secs = totalSec % 60;
 
-      if (hours > 24) {
+      if (hours >= 24) {
         const days = Math.floor(hours / 24);
         const remH = hours % 24;
         return `${days}天 ${remH}小時後`;
@@ -322,19 +329,43 @@
     }
 
     function formatTime(isoStr) {
-      if (!isoStr) return '--:--';
+      if (!isoStr) return '';
       try {
         const d = new Date(isoStr);
-        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return d.toLocaleString([], { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       } catch {
-        return '--:--';
+        return '';
       }
     }
 
-    function getColorClass(pct) {
-      if (pct <= 20) return 'text-red-400';
-      if (pct <= 50) return 'text-amber-400';
-      return '';
+    function renderBucket(prefix, bucket, defaultColor) {
+      const pctEl = document.getElementById(`${prefix}-pct`);
+      const barEl = document.getElementById(`${prefix}-bar`);
+      const cdEl = document.getElementById(`${prefix}-countdown`);
+      const timeEl = document.getElementById(`${prefix}-time`);
+
+      if (!bucket) {
+        pctEl.textContent = '--';
+        return;
+      }
+
+      const pct = bucket.remainingPercent;
+      pctEl.textContent = `${pct}%`;
+      barEl.style.width = `${pct}%`;
+
+      if (pct <= 20) {
+        barEl.className = 'h-full bg-rose-500 rounded-full transition-all duration-700';
+        pctEl.className = 'font-bold font-mono text-rose-500';
+      } else if (pct <= 50) {
+        barEl.className = 'h-full bg-amber-400 rounded-full transition-all duration-700';
+        pctEl.className = 'font-bold font-mono text-amber-400';
+      } else {
+        barEl.className = `h-full ${defaultColor} rounded-full transition-all duration-700`;
+        pctEl.className = `font-bold font-mono ${defaultColor.replace('bg-', 'text-')}`;
+      }
+
+      cdEl.textContent = formatCountdown(bucket.resetTime);
+      timeEl.textContent = formatTime(bucket.resetTime);
     }
 
     function renderUI(data) {
@@ -343,84 +374,46 @@
 
       const pools = data.pools;
       
-      // Update Pools
-      ['claude', 'argon', 'gemini'].forEach(id => {
-        const pool = pools[id];
-        if (!pool) return;
-        const pct = pool.remainingPercent;
-        
-        const pctEl = document.getElementById(`${id}-pct`);
-        const barEl = document.getElementById(`${id}-bar`);
-        const cdEl = document.getElementById(`${id}-countdown`);
-        const rtEl = document.getElementById(`${id}-reset-time`);
+      // Claude & GPT
+      if (pools.claude) {
+        renderBucket('claude-5h', pools.claude.h5, 'bg-purple-400');
+        renderBucket('claude-week', pools.claude.weekly, 'bg-purple-400');
+      }
 
-        pctEl.textContent = `${pct}%`;
-        barEl.style.width = `${pct}%`;
+      // Gemini
+      if (pools.gemini) {
+        renderBucket('gemini-5h', pools.gemini.h5, 'bg-emerald-400');
+        renderBucket('gemini-week', pools.gemini.weekly, 'bg-emerald-400');
+      }
 
-        // Color coding on low quota
-        if (pct <= 20) {
-          barEl.className = 'h-full bg-rose-500 rounded-full transition-all duration-700 ease-out';
-          pctEl.className = 'text-2xl font-bold font-mono text-rose-500';
-        } else if (pct <= 50) {
-          barEl.className = 'h-full bg-amber-400 rounded-full transition-all duration-700 ease-out';
-          pctEl.className = 'text-2xl font-bold font-mono text-amber-400';
-        }
+      // Argon
+      if (pools.argon) {
+        renderBucket('argon-week', pools.argon.weekly, 'bg-sky-400');
+      }
 
-        cdEl.textContent = formatCountdown(pool.resetTime);
-        rtEl.textContent = pool.resetTime ? `預計 ${formatTime(pool.resetTime)}` : '定期重置';
-      });
-
-      // Update Bottleneck banner
+      // Bottleneck Banner
       const bn = data.bottleneck;
-      const bnBanner = document.getElementById('bottleneck-banner');
       const bnText = document.getElementById('bn-text');
       const bnPct = document.getElementById('bn-percent');
       const bnIcon = document.getElementById('bn-icon');
 
       if (bn && bn.remainingPercent < 30) {
         bnIcon.textContent = '🔴';
-        bnText.innerHTML = `最高警戒：<span class="font-bold text-red-400">${bn.name}</span> 配額緊繃`;
+        bnText.innerHTML = `最緊繃限制：<span class="font-bold text-red-400">${bn.title}</span>`;
         bnPct.textContent = `${bn.remainingPercent}%`;
         bnPct.className = 'text-xl font-bold font-mono text-red-400';
       } else if (bn && bn.remainingPercent < 60) {
         bnIcon.textContent = '🟡';
-        bnText.innerHTML = `注意：<span class="font-bold text-amber-400">${bn.name}</span> 正處於活躍消耗中`;
+        bnText.innerHTML = `注意：<span class="font-bold text-amber-400">${bn.title}</span> 處於活躍消耗`;
         bnPct.textContent = `${bn.remainingPercent}%`;
         bnPct.className = 'text-xl font-bold font-mono text-amber-400';
       } else {
         bnIcon.textContent = '🟢';
-        bnText.textContent = '全模型配額充足 (90%+)';
+        bnText.innerHTML = bn ? `當前限制項目：<span class="text-white">${bn.title}</span>` : '配額充足';
         bnPct.textContent = bn ? `${bn.remainingPercent}%` : '100%';
         bnPct.className = 'text-xl font-bold font-mono text-emerald-400';
       }
 
-      // Update detail list
-      const detailContainer = document.getElementById('detail-list');
-      detailContainer.innerHTML = '';
-      let totalModels = 0;
-
-      ['claude', 'argon', 'gemini'].forEach(pId => {
-        const pool = pools[pId];
-        if (!pool || !pool.models) return;
-        totalModels += pool.models.length;
-
-        pool.models.forEach(m => {
-          const row = document.createElement('div');
-          row.className = 'pt-2 flex items-center justify-between text-xs';
-          row.innerHTML = `
-            <div class="flex flex-col">
-              <span class="font-mono font-medium text-gray-200">${m.modelId}</span>
-              <span class="text-[10px] text-gray-500">重置: ${formatCountdown(m.resetTime)}</span>
-            </div>
-            <div class="font-mono font-bold ${m.remainingPercent <= 20 ? 'text-red-400' : (m.remainingPercent <= 50 ? 'text-amber-400' : 'text-gray-300')}">
-              ${m.remainingPercent}%
-            </div>
-          `;
-          detailContainer.appendChild(row);
-        });
-      });
-
-      document.getElementById('total-models-count').textContent = totalModels;
       document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
     }
 
@@ -446,12 +439,12 @@
       if (countdownInterval) clearInterval(countdownInterval);
       countdownInterval = setInterval(() => {
         if (!currentData) return;
-        ['claude', 'argon', 'gemini'].forEach(id => {
-          const pool = currentData.pools[id];
-          if (pool) {
-            document.getElementById(`${id}-countdown`).textContent = formatCountdown(pool.resetTime);
-          }
-        });
+        const pools = currentData.pools;
+        if (pools.claude?.h5) document.getElementById('claude-5h-countdown').textContent = formatCountdown(pools.claude.h5.resetTime);
+        if (pools.claude?.weekly) document.getElementById('claude-week-countdown').textContent = formatCountdown(pools.claude.weekly.resetTime);
+        if (pools.gemini?.h5) document.getElementById('gemini-5h-countdown').textContent = formatCountdown(pools.gemini.h5.resetTime);
+        if (pools.gemini?.weekly) document.getElementById('gemini-week-countdown').textContent = formatCountdown(pools.gemini.weekly.resetTime);
+        if (pools.argon?.weekly) document.getElementById('argon-week-countdown').textContent = formatCountdown(pools.argon.weekly.resetTime);
       }, 1000);
     }
 
